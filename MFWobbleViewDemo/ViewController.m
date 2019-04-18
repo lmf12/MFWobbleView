@@ -29,6 +29,7 @@
     CGFloat width = self.view.frame.size.width;
     CGFloat height = self.view.frame.size.width / image.size.width * image.size.height;
     self.wobbleView = [[MFWobbleView alloc] initWithFrame:CGRectMake(0, 100, width, height)];
+    self.wobbleView.image = image;
     [self.view addSubview:self.wobbleView];
 }
 
