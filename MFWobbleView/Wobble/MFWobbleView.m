@@ -30,6 +30,11 @@ typedef struct {
 
 @property (nonatomic, strong) CAEAGLLayer *glLayer;
 
+@property (nonatomic, strong) CADisplayLink *displayLink;
+@property (nonatomic, assign) NSTimeInterval startTimeInterval;
+
+@property (nonatomic, assign) GLuint textureID;
+
 @end
 
 @implementation MFWobbleView
@@ -46,6 +51,9 @@ typedef struct {
     if (_program) {
         glUseProgram(0);
         glDeleteProgram(_program);
+    }
+    if (_textureID > 0) {
+        glDeleteTextures(1, &_textureID);
     }
     [self deleteBuffers];
 }
@@ -66,42 +74,26 @@ typedef struct {
     return self;
 }
 
+- (void)removeFromSuperview {
+    [super removeFromSuperview];
+    
+    // 移除 displayLink
+    if (self.displayLink) {
+        [self.displayLink invalidate];
+        self.displayLink = nil;
+    }
+}
+
 #pragma mark - Custom Accessor
 
 - (void)setImage:(UIImage *)image {
     _image = image;
 
-    GLuint texture = [MFShaderHelper createTextureWithImage:image];
-    
-    glViewport(0, 0, self.drawableWidth, self.drawableHeight);
-    glUseProgram(self.program);
-    
-    GLuint positionSlot = glGetAttribLocation(self.program, "Position");
-    GLuint textureSlot = glGetUniformLocation(self.program, "Texture");
-    GLuint textureCoordsSlot = glGetAttribLocation(self.program, "TextureCoords");
-    
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, texture);
-    glUniform1i(textureSlot, 0);
-    
-    glBindBuffer(GL_ARRAY_BUFFER, self.vertexBuffer);
-    GLsizeiptr bufferSizeBytes = sizeof(SenceVertex) * 4;
-    glBufferData(GL_ARRAY_BUFFER, bufferSizeBytes, self.vertices, GL_STATIC_DRAW);
-    
-    glEnableVertexAttribArray(positionSlot);
-    glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, sizeof(SenceVertex), NULL + offsetof(SenceVertex, positionCoord));
-    
-    glEnableVertexAttribArray(textureCoordsSlot);
-    glVertexAttribPointer(textureCoordsSlot, 2, GL_FLOAT, GL_FALSE, sizeof(SenceVertex), NULL + offsetof(SenceVertex, textureCoord));
-    
-    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-
-    [self.context presentRenderbuffer:GL_RENDERBUFFER];
-    
-    glBindTexture(GL_TEXTURE_2D, 0);
-    if (texture > 0) {
-        glDeleteTextures(1, &texture);
+    if (_textureID > 0) {
+        glDeleteTextures(1, &_textureID);
     }
+    self.textureID = [MFShaderHelper createTextureWithImage:image];
+    [self display];
 }
 
 #pragma mark - Private
@@ -128,6 +120,12 @@ typedef struct {
     
     // 绑定纹理输出的层
     [self bindRenderLayer:self.glLayer];
+    
+    // 指定窗口大小
+    glViewport(0, 0, self.drawableWidth, self.drawableHeight);
+    
+    // 开启动画
+    [self startAnimation];
 }
 
 // 创建输出层
@@ -193,6 +191,69 @@ typedef struct {
     glGetRenderbufferParameteriv(GL_RENDERBUFFER, GL_RENDERBUFFER_HEIGHT, &backingHeight);
     
     return backingHeight;
+}
+
+// 开启动画
+- (void)startAnimation {
+    if (self.displayLink) {
+        [self.displayLink invalidate];
+        self.displayLink = nil;
+    }
+    
+    self.startTimeInterval = 0;
+    self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(timeAction)];
+    [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop]
+                           forMode:NSRunLoopCommonModes];
+}
+
+// 刷新视图
+- (void)display {
+    glUseProgram(self.program);
+    
+    GLuint positionSlot = glGetAttribLocation(self.program, "Position");
+    GLuint textureSlot = glGetUniformLocation(self.program, "Texture");
+    GLuint textureCoordsSlot = glGetAttribLocation(self.program, "TextureCoords");
+    
+    GLuint PointLT = glGetUniformLocation(self.program, "PointLT");
+    GLuint PointRT = glGetUniformLocation(self.program, "PointRT");
+    GLuint PointRB = glGetUniformLocation(self.program, "PointRB");
+    GLuint PointLB = glGetUniformLocation(self.program, "PointLB");
+    
+    glUniform2f(PointLT, 0.0, 0.0);
+    glUniform2f(PointRT, 1.0, 0.0);
+    glUniform2f(PointRB, 1.0, 1.0);
+    glUniform2f(PointLB, 0.0, 1.0);
+    
+    CGFloat currentTime = self.displayLink.timestamp - self.startTimeInterval;
+    GLuint time = glGetUniformLocation(self.program, "Time");
+    glUniform1f(time, currentTime);
+    
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, self.textureID);
+    glUniform1i(textureSlot, 0);
+    
+    glBindBuffer(GL_ARRAY_BUFFER, self.vertexBuffer);
+    GLsizeiptr bufferSizeBytes = sizeof(SenceVertex) * 4;
+    glBufferData(GL_ARRAY_BUFFER, bufferSizeBytes, self.vertices, GL_STATIC_DRAW);
+    
+    glEnableVertexAttribArray(positionSlot);
+    glVertexAttribPointer(positionSlot, 3, GL_FLOAT, GL_FALSE, sizeof(SenceVertex), NULL + offsetof(SenceVertex, positionCoord));
+    
+    glEnableVertexAttribArray(textureCoordsSlot);
+    glVertexAttribPointer(textureCoordsSlot, 2, GL_FLOAT, GL_FALSE, sizeof(SenceVertex), NULL + offsetof(SenceVertex, textureCoord));
+    
+    glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    
+    [self.context presentRenderbuffer:GL_RENDERBUFFER];
+}
+
+#pragma mark - Action
+
+- (void)timeAction {
+    if (self.startTimeInterval == 0) {
+        self.startTimeInterval = self.displayLink.timestamp;
+    }
+    [self display];
 }
 
 @end
