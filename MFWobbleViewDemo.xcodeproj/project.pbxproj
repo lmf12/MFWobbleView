@@ -7,24 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		E89C65B62268B2CC0061150A /* MFShaderHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E89C65B52268B2CC0061150A /* MFShaderHelper.m */; };
-		E89C65B92268B4940061150A /* wobble.vsh in Resources */ = {isa = PBXBuildFile; fileRef = E89C65B72268B4940061150A /* wobble.vsh */; };
-		E89C65BA2268B4940061150A /* wobble.fsh in Resources */ = {isa = PBXBuildFile; fileRef = E89C65B82268B4940061150A /* wobble.fsh */; };
+		E82262A6226ADF01001975C4 /* MFSketchView.m in Sources */ = {isa = PBXBuildFile; fileRef = E822629E226ADF01001975C4 /* MFSketchView.m */; };
+		E82262A7226ADF01001975C4 /* MFShaderHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = E82262A1226ADF01001975C4 /* MFShaderHelper.m */; };
+		E82262A8226ADF01001975C4 /* MFWobbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = E82262A3226ADF01001975C4 /* MFWobbleView.m */; };
+		E82262A9226ADF01001975C4 /* wobble.fsh in Resources */ = {isa = PBXBuildFile; fileRef = E82262A4226ADF01001975C4 /* wobble.fsh */; };
+		E82262AA226ADF01001975C4 /* wobble.vsh in Resources */ = {isa = PBXBuildFile; fileRef = E82262A5226ADF01001975C4 /* wobble.vsh */; };
+		E82262AD226ADF35001975C4 /* MFSketchModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E82262AC226ADF35001975C4 /* MFSketchModel.m */; };
 		E8FC20FE2268A22F00BB1BD9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E8FC20FD2268A22F00BB1BD9 /* AppDelegate.m */; };
 		E8FC21012268A22F00BB1BD9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8FC21002268A22F00BB1BD9 /* ViewController.m */; };
 		E8FC21042268A22F00BB1BD9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E8FC21022268A22F00BB1BD9 /* Main.storyboard */; };
 		E8FC21062268A22F00BB1BD9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E8FC21052268A22F00BB1BD9 /* Assets.xcassets */; };
 		E8FC21092268A22F00BB1BD9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E8FC21072268A22F00BB1BD9 /* LaunchScreen.storyboard */; };
 		E8FC210C2268A22F00BB1BD9 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = E8FC210B2268A22F00BB1BD9 /* main.m */; };
-		E8FC21152268A2CF00BB1BD9 /* MFWobbleView.m in Sources */ = {isa = PBXBuildFile; fileRef = E8FC21142268A2CF00BB1BD9 /* MFWobbleView.m */; };
 		E8FC21172268A55400BB1BD9 /* sample.jpg in Resources */ = {isa = PBXBuildFile; fileRef = E8FC21162268A55400BB1BD9 /* sample.jpg */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		E89C65B42268B2CC0061150A /* MFShaderHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MFShaderHelper.h; sourceTree = "<group>"; };
-		E89C65B52268B2CC0061150A /* MFShaderHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFShaderHelper.m; sourceTree = "<group>"; };
-		E89C65B72268B4940061150A /* wobble.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = wobble.vsh; sourceTree = "<group>"; };
-		E89C65B82268B4940061150A /* wobble.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = wobble.fsh; sourceTree = "<group>"; };
+		E822629D226ADF01001975C4 /* MFSketchView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFSketchView.h; sourceTree = "<group>"; };
+		E822629E226ADF01001975C4 /* MFSketchView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MFSketchView.m; sourceTree = "<group>"; };
+		E82262A0226ADF01001975C4 /* MFShaderHelper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFShaderHelper.h; sourceTree = "<group>"; };
+		E82262A1226ADF01001975C4 /* MFShaderHelper.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MFShaderHelper.m; sourceTree = "<group>"; };
+		E82262A2226ADF01001975C4 /* MFWobbleView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MFWobbleView.h; sourceTree = "<group>"; };
+		E82262A3226ADF01001975C4 /* MFWobbleView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MFWobbleView.m; sourceTree = "<group>"; };
+		E82262A4226ADF01001975C4 /* wobble.fsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = wobble.fsh; sourceTree = "<group>"; };
+		E82262A5226ADF01001975C4 /* wobble.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = wobble.vsh; sourceTree = "<group>"; };
+		E82262AB226ADF35001975C4 /* MFSketchModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MFSketchModel.h; sourceTree = "<group>"; };
+		E82262AC226ADF35001975C4 /* MFSketchModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFSketchModel.m; sourceTree = "<group>"; };
 		E8FC20F92268A22F00BB1BD9 /* MFWobbleViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MFWobbleViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8FC20FC2268A22F00BB1BD9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E8FC20FD2268A22F00BB1BD9 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -35,8 +43,6 @@
 		E8FC21082268A22F00BB1BD9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		E8FC210A2268A22F00BB1BD9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E8FC210B2268A22F00BB1BD9 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		E8FC21132268A2CF00BB1BD9 /* MFWobbleView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MFWobbleView.h; sourceTree = "<group>"; };
-		E8FC21142268A2CF00BB1BD9 /* MFWobbleView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFWobbleView.m; sourceTree = "<group>"; };
 		E8FC21162268A55400BB1BD9 /* sample.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = sample.jpg; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -51,6 +57,30 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		E822629C226ADF01001975C4 /* Sketch */ = {
+			isa = PBXGroup;
+			children = (
+				E822629D226ADF01001975C4 /* MFSketchView.h */,
+				E822629E226ADF01001975C4 /* MFSketchView.m */,
+				E82262AB226ADF35001975C4 /* MFSketchModel.h */,
+				E82262AC226ADF35001975C4 /* MFSketchModel.m */,
+			);
+			path = Sketch;
+			sourceTree = "<group>";
+		};
+		E822629F226ADF01001975C4 /* Wobble */ = {
+			isa = PBXGroup;
+			children = (
+				E82262A0226ADF01001975C4 /* MFShaderHelper.h */,
+				E82262A1226ADF01001975C4 /* MFShaderHelper.m */,
+				E82262A2226ADF01001975C4 /* MFWobbleView.h */,
+				E82262A3226ADF01001975C4 /* MFWobbleView.m */,
+				E82262A4226ADF01001975C4 /* wobble.fsh */,
+				E82262A5226ADF01001975C4 /* wobble.vsh */,
+			);
+			path = Wobble;
+			sourceTree = "<group>";
+		};
 		E8FC20F02268A22F00BB1BD9 = {
 			isa = PBXGroup;
 			children = (
@@ -88,12 +118,8 @@
 		E8FC21122268A29200BB1BD9 /* MFWobbleView */ = {
 			isa = PBXGroup;
 			children = (
-				E89C65B82268B4940061150A /* wobble.fsh */,
-				E89C65B72268B4940061150A /* wobble.vsh */,
-				E8FC21132268A2CF00BB1BD9 /* MFWobbleView.h */,
-				E8FC21142268A2CF00BB1BD9 /* MFWobbleView.m */,
-				E89C65B42268B2CC0061150A /* MFShaderHelper.h */,
-				E89C65B52268B2CC0061150A /* MFShaderHelper.m */,
+				E822629C226ADF01001975C4 /* Sketch */,
+				E822629F226ADF01001975C4 /* Wobble */,
 			);
 			path = MFWobbleView;
 			sourceTree = "<group>";
@@ -156,11 +182,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				E89C65B92268B4940061150A /* wobble.vsh in Resources */,
+				E82262AA226ADF01001975C4 /* wobble.vsh in Resources */,
+				E82262A9226ADF01001975C4 /* wobble.fsh in Resources */,
 				E8FC21092268A22F00BB1BD9 /* LaunchScreen.storyboard in Resources */,
 				E8FC21062268A22F00BB1BD9 /* Assets.xcassets in Resources */,
 				E8FC21042268A22F00BB1BD9 /* Main.storyboard in Resources */,
-				E89C65BA2268B4940061150A /* wobble.fsh in Resources */,
 				E8FC21172268A55400BB1BD9 /* sample.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -173,10 +199,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8FC21012268A22F00BB1BD9 /* ViewController.m in Sources */,
+				E82262A6226ADF01001975C4 /* MFSketchView.m in Sources */,
 				E8FC210C2268A22F00BB1BD9 /* main.m in Sources */,
-				E8FC21152268A2CF00BB1BD9 /* MFWobbleView.m in Sources */,
+				E82262AD226ADF35001975C4 /* MFSketchModel.m in Sources */,
 				E8FC20FE2268A22F00BB1BD9 /* AppDelegate.m in Sources */,
-				E89C65B62268B2CC0061150A /* MFShaderHelper.m in Sources */,
+				E82262A8226ADF01001975C4 /* MFWobbleView.m in Sources */,
+				E82262A7226ADF01001975C4 /* MFShaderHelper.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -313,6 +341,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7P79J85545;
 				INFOPLIST_FILE = MFWobbleViewDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lyman.MFWobbleViewDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -327,6 +356,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 7P79J85545;
 				INFOPLIST_FILE = MFWobbleViewDemo/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.lyman.MFWobbleViewDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
