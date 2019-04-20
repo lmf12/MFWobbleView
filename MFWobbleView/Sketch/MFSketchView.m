@@ -10,6 +10,13 @@
 
 #import "MFSketchView.h"
 
+typedef NS_ENUM(NSUInteger, MFSketchPointType) {
+    MFSketchPointTypeLT = 0,
+    MFSketchPointTypeRT,
+    MFSketchPointTypeRB,
+    MFSketchPointTypeLB
+};
+
 @interface MFSketchView ()
 
 @property (nonatomic, strong) NSMutableArray<MFSketchModel *> *sketchModels;
@@ -25,6 +32,10 @@
 // 画路径
 @property (nonatomic, strong) CAShapeLayer *pathLayer;
 @property (nonatomic, strong) UIBezierPath *pathsPath;
+
+// 当前控制的点
+@property (nonatomic, weak) MFSketchModel *currentControlModel;
+@property (nonatomic, assign) MFSketchPointType currentControlPointType;
 
 @end
 
@@ -44,6 +55,72 @@
     self.lineLayer.frame = self.bounds;
     self.pointLayer.frame = self.bounds;
     self.pathLayer.frame = self.bounds;
+}
+
+#pragma mark - Touches
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    
+    CGPoint currentPoint = [[touches anyObject] locationInView:self];
+    
+    CGFloat maxDistance = 20;  // 判定选中的最大距离
+    for (MFSketchModel *model in self.sketchModels) {
+        NSArray *points = @[@(model.pointLT),
+                            @(model.pointRT),
+                            @(model.pointRB),
+                            @(model.pointLB)];
+        for (NSValue *value in points) {
+            CGPoint point = [value CGPointValue];
+            CGFloat distance = sqrt(pow(point.x - currentPoint.x, 2.0) + pow(point.y - currentPoint.y, 2.0));
+            if (distance <= maxDistance) {
+                self.currentControlModel = model;
+                NSInteger pointIndex = [points indexOfObject:value];
+                self.currentControlPointType = (MFSketchPointType)pointIndex;
+                break;
+            }
+        }
+    }
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesMoved:touches withEvent:event];
+    
+    if (self.currentControlModel) {
+        CGPoint point = [[touches anyObject] locationInView:self];
+        if (!CGRectContainsPoint(self.bounds, point)) {
+            return;
+        }
+        switch (self.currentControlPointType) {
+            case MFSketchPointTypeLT:
+                self.currentControlModel.pointLT = point;
+                break;
+            case MFSketchPointTypeRT:
+                self.currentControlModel.pointRT = point;
+                break;
+            case MFSketchPointTypeRB:
+                self.currentControlModel.pointRB = point;
+                break;
+            case MFSketchPointTypeLB:
+                self.currentControlModel.pointLB = point;
+                break;
+            default:
+                break;
+        }
+        [self reloadData];
+    }
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesEnded:touches withEvent:event];
+    
+    self.currentControlModel = nil;
+}
+
+- (void)touchesCancelled:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesCancelled:touches withEvent:event];
+    
+    self.currentControlModel = nil;
 }
 
 #pragma mark - Public
@@ -125,7 +202,7 @@
  绘制四个顶点
  */
 - (void)drawPointsWithSketchModel:(MFSketchModel *)sketchModel {
-    CGFloat radius = 5;
+    CGFloat radius = 8;
     [self.pointPath moveToPoint:sketchModel.pointLT];
     [self.pointPath addArcWithCenter:sketchModel.pointLT
                               radius:radius
