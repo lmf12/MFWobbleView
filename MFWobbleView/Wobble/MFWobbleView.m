@@ -12,6 +12,8 @@
 
 #import "MFWobbleView.h"
 
+static NSInteger const kMaxWobbleCount = 4;
+
 typedef struct {
     GLKVector3 positionCoord; // (X, Y, Z)
     GLKVector2 textureCoord; // (U, V)
@@ -100,11 +102,7 @@ typedef struct {
 
 - (void)reset {
     [self stopAnimation];
-    
-    self.pointLT = CGPointZero;
-    self.pointRT = CGPointZero;
-    self.pointRB = CGPointZero;
-    self.pointLB = CGPointZero;
+    self.wobbleModels = nil;
     [self display];
 }
 
@@ -231,15 +229,31 @@ typedef struct {
     GLuint textureSlot = glGetUniformLocation(self.program, "Texture");
     GLuint textureCoordsSlot = glGetAttribLocation(self.program, "TextureCoords");
     
-    GLuint PointLT = glGetUniformLocation(self.program, "PointLT");
-    GLuint PointRT = glGetUniformLocation(self.program, "PointRT");
-    GLuint PointRB = glGetUniformLocation(self.program, "PointRB");
-    GLuint PointLB = glGetUniformLocation(self.program, "PointLB");
+    int wobbleCount = (int)MIN(self.wobbleModels.count, kMaxWobbleCount);
     
-    glUniform2f(PointLT, self.pointLT.x, self.pointLT.y);
-    glUniform2f(PointRT, self.pointRT.x, self.pointRT.y);
-    glUniform2f(PointRB, self.pointRB.x, self.pointRB.y);
-    glUniform2f(PointLB, self.pointLB.x, self.pointLB.y);
+    GLuint count = glGetUniformLocation(self.program, "SketchCount");
+    glUniform1i(count, wobbleCount);
+    
+    for (NSInteger index = 0; index < wobbleCount; ++index) {
+        MFWobbleModel *model = self.wobbleModels[index];
+        char nameLT[30];
+        char nameRT[30];
+        char nameRB[30];
+        char nameLB[30];
+        sprintf(nameLT, "sketchs[%d].PointLT", (int)index);
+        sprintf(nameRT, "sketchs[%d].PointRT", (int)index);
+        sprintf(nameRB, "sketchs[%d].PointRB", (int)index);
+        sprintf(nameLB, "sketchs[%d].PointLB", (int)index);
+        GLuint PointLT = glGetUniformLocation(self.program, nameLT);
+        GLuint PointRT = glGetUniformLocation(self.program, nameRT);
+        GLuint PointRB = glGetUniformLocation(self.program, nameRB);
+        GLuint PointLB = glGetUniformLocation(self.program, nameLB);
+        
+        glUniform2f(PointLT, model.pointLT.x, model.pointLT.y);
+        glUniform2f(PointRT, model.pointRT.x, model.pointRT.y);
+        glUniform2f(PointRB, model.pointRB.x, model.pointRB.y);
+        glUniform2f(PointLB, model.pointLB.x, model.pointLB.y);
+    }
     
     CGFloat currentTime = self.displayLink.timestamp - self.startTimeInterval;
     GLuint time = glGetUniformLocation(self.program, "Time");

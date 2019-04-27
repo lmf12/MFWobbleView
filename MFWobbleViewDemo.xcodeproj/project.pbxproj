@@ -13,6 +13,7 @@
 		E82262A9226ADF01001975C4 /* wobble.fsh in Resources */ = {isa = PBXBuildFile; fileRef = E82262A4226ADF01001975C4 /* wobble.fsh */; };
 		E82262AA226ADF01001975C4 /* wobble.vsh in Resources */ = {isa = PBXBuildFile; fileRef = E82262A5226ADF01001975C4 /* wobble.vsh */; };
 		E82262AD226ADF35001975C4 /* MFSketchModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E82262AC226ADF35001975C4 /* MFSketchModel.m */; };
+		E82262B222744BF1001975C4 /* MFWobbleModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E82262B122744BF1001975C4 /* MFWobbleModel.m */; };
 		E8FC20FE2268A22F00BB1BD9 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E8FC20FD2268A22F00BB1BD9 /* AppDelegate.m */; };
 		E8FC21012268A22F00BB1BD9 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E8FC21002268A22F00BB1BD9 /* ViewController.m */; };
 		E8FC21042268A22F00BB1BD9 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E8FC21022268A22F00BB1BD9 /* Main.storyboard */; };
@@ -33,6 +34,8 @@
 		E82262A5226ADF01001975C4 /* wobble.vsh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = wobble.vsh; sourceTree = "<group>"; };
 		E82262AB226ADF35001975C4 /* MFSketchModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MFSketchModel.h; sourceTree = "<group>"; };
 		E82262AC226ADF35001975C4 /* MFSketchModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFSketchModel.m; sourceTree = "<group>"; };
+		E82262B022744BF1001975C4 /* MFWobbleModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MFWobbleModel.h; sourceTree = "<group>"; };
+		E82262B122744BF1001975C4 /* MFWobbleModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MFWobbleModel.m; sourceTree = "<group>"; };
 		E8FC20F92268A22F00BB1BD9 /* MFWobbleViewDemo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MFWobbleViewDemo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8FC20FC2268A22F00BB1BD9 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		E8FC20FD2268A22F00BB1BD9 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -75,6 +78,8 @@
 				E82262A1226ADF01001975C4 /* MFShaderHelper.m */,
 				E82262A2226ADF01001975C4 /* MFWobbleView.h */,
 				E82262A3226ADF01001975C4 /* MFWobbleView.m */,
+				E82262B022744BF1001975C4 /* MFWobbleModel.h */,
+				E82262B122744BF1001975C4 /* MFWobbleModel.m */,
 				E82262A4226ADF01001975C4 /* wobble.fsh */,
 				E82262A5226ADF01001975C4 /* wobble.vsh */,
 			);
@@ -199,6 +204,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				E8FC21012268A22F00BB1BD9 /* ViewController.m in Sources */,
+				E82262B222744BF1001975C4 /* MFWobbleModel.m in Sources */,
 				E82262A6226ADF01001975C4 /* MFSketchView.m in Sources */,
 				E8FC210C2268A22F00BB1BD9 /* main.m in Sources */,
 				E82262AD226ADF35001975C4 /* MFSketchModel.m in Sources */,

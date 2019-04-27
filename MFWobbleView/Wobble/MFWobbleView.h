@@ -8,14 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
+#import "MFWobbleModel.h"
+
 @interface MFWobbleView : UIView
 
 @property (nonatomic, strong) UIImage *image;
 
-@property (nonatomic, assign) CGPoint pointLT;
-@property (nonatomic, assign) CGPoint pointRT;
-@property (nonatomic, assign) CGPoint pointRB;
-@property (nonatomic, assign) CGPoint pointLB;
+@property (nonatomic, copy) NSArray<MFWobbleModel *> *wobbleModels;
 
 /**
  配置完成

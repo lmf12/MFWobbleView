@@ -73,13 +73,20 @@
 }
 
 - (IBAction)confirmAction:(id)sender {
-    MFSketchModel *model = [self.sketchView.sketchModels firstObject];
     CGFloat width = self.sketchView.frame.size.width;
     CGFloat height = self.sketchView.frame.size.height;
-    self.wobbleView.pointLT = CGPointMake(model.pointLT.x / width, 1 - (model.pointLT.y / height));
-    self.wobbleView.pointRT = CGPointMake(model.pointRT.x / width, 1 - (model.pointRT.y / height));
-    self.wobbleView.pointRB = CGPointMake(model.pointRB.x / width, 1 - (model.pointRB.y / height));
-    self.wobbleView.pointLB = CGPointMake(model.pointLB.x / width, 1 - (model.pointLB.y / height));
+
+    NSMutableArray *mutArr = [[NSMutableArray alloc] init];
+    for (MFSketchModel *model in self.sketchView.sketchModels) {
+        MFWobbleModel *wobbleModel = [[MFWobbleModel alloc] init];
+        wobbleModel.pointLT = CGPointMake(model.pointLT.x / width, 1 - (model.pointLT.y / height));
+        wobbleModel.pointRT = CGPointMake(model.pointRT.x / width, 1 - (model.pointRT.y / height));
+        wobbleModel.pointRB = CGPointMake(model.pointRB.x / width, 1 - (model.pointRB.y / height));
+        wobbleModel.pointLB = CGPointMake(model.pointLB.x / width, 1 - (model.pointLB.y / height));
+        
+        [mutArr addObject:wobbleModel];
+    }
+    self.wobbleView.wobbleModels = [mutArr copy];
     [self.wobbleView prepare];
     
     [self.sketchView clear];

@@ -1,14 +1,19 @@
 precision highp float;
 
+struct Sketch {
+    vec2 PointLT;
+    vec2 PointRT;
+    vec2 PointRB;
+    vec2 PointLB;
+};
+
 uniform sampler2D Texture;
 varying vec2 TextureCoordsVarying;
 
 uniform float Time;
 
-uniform vec2 PointLT;
-uniform vec2 PointRT;
-uniform vec2 PointRB;
-uniform vec2 PointLB;
+uniform Sketch sketchs[4];
+uniform int SketchCount;
 
 const float PI = 3.1415926;
 
@@ -64,29 +69,19 @@ float getMaxDistance(vec2 point, vec2 point1, vec2 point2, vec2 point3, vec2 cen
     return resultDistance;
 }
 
-void main (void) {
-    
-    float time = mod(Time, 2.0);
-    
-    vec2 center = (PointLT + PointRT + PointRB + PointLB) / 4.0;
+vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float time, vec2 targetPoint) {
+    vec2 center = (pointLT + pointRT + pointRB + pointLB) / 4.0;
     float distanceToCenter = distance(TextureCoordsVarying, center);
     float maxDistance = -1.0;
     
+    vec2 centerLeft = (pointLT + pointLB) / 2.0;
+    vec2 centerTop = (pointLT + pointRT) / 2.0;
+    vec2 centerRight = (pointRT + pointRB) / 2.0;
+    vec2 centerBottom = (pointRB + pointLB) / 2.0;
     
-    
-    
-    
-    
-    
-    vec2 centerLeft = (PointLT + PointLB) / 2.0;
-    vec2 centerTop = (PointLT + PointRT) / 2.0;
-    vec2 centerRight = (PointRT + PointRB) / 2.0;
-    vec2 centerBottom = (PointRB + PointLB) / 2.0;
-    
-    float a = getA(center, TextureCoordsVarying);
-    float b = getB(center, TextureCoordsVarying);
-    float c = getC(center, TextureCoordsVarying);
-    
+    float a = getA(center, targetPoint);
+    float b = getB(center, targetPoint);
+    float c = getC(center, targetPoint);
     
     int times = 0;
     float resultDistance = -1.0;
@@ -97,22 +92,22 @@ void main (void) {
         vec2 point3;
         if (times == 0) {
             point1 = centerLeft;
-            point2 = PointLT;
+            point2 = pointLT;
             point3 = centerTop;
         } else if (times == 1) {
             point1 = centerTop;
-            point2 = PointRT;
+            point2 = pointRT;
             point3 = centerRight;
         } else if (times == 2) {
             point1 = centerRight;
-            point2 = PointRB;
+            point2 = pointRB;
             point3 = centerBottom;
         } else if (times == 3) {
             point1 = centerLeft;
-            point2 = PointLB;
+            point2 = pointLB;
             point3 = centerBottom;
         }
-        resultDistance = getMaxDistance(TextureCoordsVarying,
+        resultDistance = getMaxDistance(targetPoint,
                                         point1, point2, point3,
                                         center,
                                         a, b, c);
@@ -126,6 +121,21 @@ void main (void) {
     if (maxDistance > 0.0) {
         vec2 maxOffset = vec2(0.04, 0.04) * sin(time * PI);
         offset = max(maxDistance - distanceToCenter, 0.0) / maxDistance * maxOffset;
+    }
+    
+    return offset;
+}
+
+void main (void) {
+    float time = mod(Time, 2.0);
+
+    int count = SketchCount > 4 ? 4 : SketchCount;
+    int times = 0;
+    vec2 offset = vec2(0.0, 0.0);
+    while (!any(greaterThan(offset, vec2(0.0, 0.0))) && times < count) {
+        Sketch sketch = sketchs[times];
+        offset = getOffset(sketch.PointLT, sketch.PointRT, sketch.PointRB, sketch.PointLB, time, TextureCoordsVarying);
+        times++;
     }
     
     vec4 mask = texture2D(Texture, TextureCoordsVarying + offset);

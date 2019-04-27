@@ -8,6 +8,8 @@
 
 #import "MFSketchView.h"
 
+static NSInteger const kMaxSketchCount = 4;
+
 typedef NS_ENUM(NSUInteger, MFSketchPointType) {
     MFSketchPointTypeLT = 0,
     MFSketchPointTypeRT,
@@ -124,6 +126,11 @@ typedef NS_ENUM(NSUInteger, MFSketchPointType) {
 #pragma mark - Public
 
 - (void)addSketch {
+    // 超过最大数量，直接忽略
+    if (self.sketchModels.count >= kMaxSketchCount) {
+        return;
+    }
+    
     [self.sketchModels addObject:[self defaultModel]];
     [self reloadData];
 }
