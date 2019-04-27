@@ -77,11 +77,7 @@ typedef struct {
 - (void)removeFromSuperview {
     [super removeFromSuperview];
     
-    // 移除 displayLink
-    if (self.displayLink) {
-        [self.displayLink invalidate];
-        self.displayLink = nil;
-    }
+    [self stopAnimation];
 }
 
 #pragma mark - Custom Accessor
@@ -93,6 +89,22 @@ typedef struct {
         glDeleteTextures(1, &_textureID);
     }
     self.textureID = [MFShaderHelper createTextureWithImage:image];
+    [self display];
+}
+
+#pragma mark - Public
+
+- (void)prepare {
+    [self startAnimation];
+}
+
+- (void)reset {
+    [self stopAnimation];
+    
+    self.pointLT = CGPointZero;
+    self.pointRT = CGPointZero;
+    self.pointRB = CGPointZero;
+    self.pointLB = CGPointZero;
     [self display];
 }
 
@@ -123,9 +135,6 @@ typedef struct {
     
     // 指定窗口大小
     glViewport(0, 0, self.drawableWidth, self.drawableHeight);
-    
-    // 开启动画
-    [self startAnimation];
 }
 
 // 创建输出层
@@ -206,6 +215,14 @@ typedef struct {
                            forMode:NSRunLoopCommonModes];
 }
 
+// 结束动画
+- (void)stopAnimation {
+    if (self.displayLink) {
+        [self.displayLink invalidate];
+        self.displayLink = nil;
+    }
+}
+
 // 刷新视图
 - (void)display {
     glUseProgram(self.program);
@@ -219,10 +236,10 @@ typedef struct {
     GLuint PointRB = glGetUniformLocation(self.program, "PointRB");
     GLuint PointLB = glGetUniformLocation(self.program, "PointLB");
     
-    glUniform2f(PointLT, 0.0, 0.0);
-    glUniform2f(PointRT, 1.0, 0.0);
-    glUniform2f(PointRB, 1.0, 1.0);
-    glUniform2f(PointLB, 0.0, 1.0);
+    glUniform2f(PointLT, self.pointLT.x, self.pointLT.y);
+    glUniform2f(PointRT, self.pointRT.x, self.pointRT.y);
+    glUniform2f(PointRB, self.pointRB.x, self.pointRB.y);
+    glUniform2f(PointLB, self.pointLB.x, self.pointLB.y);
     
     CGFloat currentTime = self.displayLink.timestamp - self.startTimeInterval;
     GLuint time = glGetUniformLocation(self.program, "Time");

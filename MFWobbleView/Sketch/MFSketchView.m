@@ -6,8 +6,6 @@
 //  Copyright © 2019年 Lyman Li. All rights reserved.
 //
 
-#import "MFSketchModel.h"
-
 #import "MFSketchView.h"
 
 typedef NS_ENUM(NSUInteger, MFSketchPointType) {
@@ -127,6 +125,11 @@ typedef NS_ENUM(NSUInteger, MFSketchPointType) {
 
 - (void)addSketch {
     [self.sketchModels addObject:[self defaultModel]];
+    [self reloadData];
+}
+
+- (void)clear {
+    [self.sketchModels removeAllObjects];
     [self reloadData];
 }
 

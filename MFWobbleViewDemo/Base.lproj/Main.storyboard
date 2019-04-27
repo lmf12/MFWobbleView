@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13122.16" systemVersion="17A277" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13104.12"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -9,13 +14,62 @@
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="ViewController" customModuleProvider="" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1Mc-f9-qwl">
+                                <rect key="frame" x="40" y="572" width="70" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="7sx-aY-TSr"/>
+                                    <constraint firstAttribute="width" constant="70" id="IXc-fK-TKB"/>
+                                </constraints>
+                                <state key="normal" title="添加"/>
+                                <connections>
+                                    <action selector="addAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="3OD-ZD-xd0"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yVp-nX-Kt2">
+                                <rect key="frame" x="152.5" y="572" width="70" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="45" id="aBr-IZ-hf0"/>
+                                    <constraint firstAttribute="width" constant="70" id="mPR-F6-LEc"/>
+                                </constraints>
+                                <state key="normal" title="确定"/>
+                                <connections>
+                                    <action selector="confirmAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="Jbv-Ps-bSh"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="On0-Og-GFc">
+                                <rect key="frame" x="265" y="572" width="70" height="45"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="70" id="fLP-uA-fNK"/>
+                                    <constraint firstAttribute="height" constant="45" id="w3L-7Y-bU1"/>
+                                </constraints>
+                                <state key="normal" title="重置"/>
+                                <connections>
+                                    <action selector="confirmAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="cAv-NZ-paa"/>
+                                    <action selector="resetAction:" destination="BYZ-38-t0r" eventType="touchUpInside" id="ben-It-z0g"/>
+                                </connections>
+                            </button>
+                        </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <constraints>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="yVp-nX-Kt2" secondAttribute="bottom" constant="50" id="3k7-CM-6Qy"/>
+                            <constraint firstItem="1Mc-f9-qwl" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" multiplier="0.4" id="4br-Oc-ztG"/>
+                            <constraint firstItem="On0-Og-GFc" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" multiplier="1.6" id="Lza-db-7Y6"/>
+                            <constraint firstItem="yVp-nX-Kt2" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="mpb-8p-e0T"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="On0-Og-GFc" secondAttribute="bottom" constant="50" id="p39-pL-VcC"/>
+                            <constraint firstItem="6Tk-OE-BBY" firstAttribute="bottom" secondItem="1Mc-f9-qwl" secondAttribute="bottom" constant="50" id="uRi-FB-ENN"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <connections>
+                        <outlet property="addButton" destination="1Mc-f9-qwl" id="RUh-L1-7GH"/>
+                        <outlet property="confirmButton" destination="yVp-nX-Kt2" id="jgH-dX-xUa"/>
+                        <outlet property="resetButton" destination="On0-Og-GFc" id="H5c-v7-fZS"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>

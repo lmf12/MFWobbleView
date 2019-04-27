@@ -12,4 +12,19 @@
 
 @property (nonatomic, strong) UIImage *image;
 
+@property (nonatomic, assign) CGPoint pointLT;
+@property (nonatomic, assign) CGPoint pointRT;
+@property (nonatomic, assign) CGPoint pointRB;
+@property (nonatomic, assign) CGPoint pointLB;
+
+/**
+ 配置完成
+ */
+- (void)prepare;
+
+/**
+ 重置回初识状态
+ */
+- (void)reset;
+
 @end

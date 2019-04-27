@@ -16,6 +16,10 @@
 @property (nonatomic, strong) MFWobbleView *wobbleView;
 @property (nonatomic, strong) MFSketchView *sketchView;
 
+@property (weak, nonatomic) IBOutlet UIButton *addButton;
+@property (weak, nonatomic) IBOutlet UIButton *confirmButton;
+@property (weak, nonatomic) IBOutlet UIButton *resetButton;
+
 @end
 
 @implementation ViewController
@@ -24,9 +28,9 @@
     [super viewDidLoad];
     
     [self setupUI];
-    
-    [self setupData];
 }
+
+#pragma mark - Private
 
 - (void)setupUI {
     UIImage *image = [UIImage imageNamed:@"sample.jpg"];
@@ -38,10 +42,66 @@
     
     self.sketchView = [[MFSketchView alloc] initWithFrame:self.wobbleView.frame];
     [self.view addSubview:self.sketchView];
+    
+    self.addButton.layer.cornerRadius = 10;
+    self.addButton.backgroundColor = [UIColor blackColor];
+    [self.addButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.addButton setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+    
+    self.confirmButton.layer.cornerRadius = 10;
+    self.confirmButton.backgroundColor = [UIColor blackColor];
+    [self.confirmButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.confirmButton setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
+    self.confirmButton.enabled = NO;
+    
+    self.resetButton.layer.cornerRadius = 10;
+    self.resetButton.backgroundColor = [UIColor blackColor];
+    [self.resetButton setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.resetButton setTitleColor:[UIColor grayColor] forState:UIControlStateDisabled];
 }
 
-- (void)setupData {
+- (void)updateButtonState {
+    self.addButton.enabled = !self.sketchView.hidden;
+    self.confirmButton.enabled = [self.sketchView.sketchModels count] > 0;
+}
+
+#pragma mark - Action
+
+- (IBAction)addAction:(id)sender {
     [self.sketchView addSketch];
+    [self updateButtonState];
+}
+
+- (IBAction)confirmAction:(id)sender {
+    MFSketchModel *model = [self.sketchView.sketchModels firstObject];
+    CGFloat width = self.sketchView.frame.size.width;
+    CGFloat height = self.sketchView.frame.size.height;
+    self.wobbleView.pointLT = CGPointMake(model.pointLT.x / width, 1 - (model.pointLT.y / height));
+    self.wobbleView.pointRT = CGPointMake(model.pointRT.x / width, 1 - (model.pointRT.y / height));
+    self.wobbleView.pointRB = CGPointMake(model.pointRB.x / width, 1 - (model.pointRB.y / height));
+    self.wobbleView.pointLB = CGPointMake(model.pointLB.x / width, 1 - (model.pointLB.y / height));
+    [self.wobbleView prepare];
+    
+    [self.sketchView clear];
+    self.sketchView.hidden = YES;
+    [self updateButtonState];
+}
+
+- (IBAction)resetAction:(id)sender {
+    [self.sketchView clear];
+    self.sketchView.hidden = NO;
+    [self updateButtonState];
+    [self.wobbleView reset];
 }
 
 @end
+
+
+
+
+
+
+
+
+
+

@@ -70,7 +70,7 @@ void main (void) {
     
     vec2 center = (PointLT + PointRT + PointRB + PointLB) / 4.0;
     float distanceToCenter = distance(TextureCoordsVarying, center);
-    float maxDistance = 0.3;
+    float maxDistance = -1.0;
     
     
     
@@ -122,12 +122,11 @@ void main (void) {
         times++;
     }
     
-    
-
-    
-    
-    vec2 maxOffset = vec2(0.04, 0.04) * sin(time * PI);
-    vec2 offset = max(maxDistance - distanceToCenter, 0.0) / maxDistance * maxOffset;
+    vec2 offset = vec2(0, 0);
+    if (maxDistance > 0.0) {
+        vec2 maxOffset = vec2(0.04, 0.04) * sin(time * PI);
+        offset = max(maxDistance - distanceToCenter, 0.0) / maxDistance * maxOffset;
+    }
     
     vec4 mask = texture2D(Texture, TextureCoordsVarying + offset);
     gl_FragColor = vec4(mask.rgb, 1.0);

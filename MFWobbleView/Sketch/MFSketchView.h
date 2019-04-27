@@ -8,11 +8,20 @@
 
 #import <UIKit/UIKit.h>
 
+#import "MFSketchModel.h"
+
 @interface MFSketchView : UIView
+
+@property (nonatomic, strong, readonly) NSMutableArray<MFSketchModel *> *sketchModels;
 
 /**
  添加一个图形
  */
 - (void)addSketch;
+
+/**
+ 清除数据和视图
+ */
+- (void)clear;
 
 @end
