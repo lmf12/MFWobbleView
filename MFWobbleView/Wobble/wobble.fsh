@@ -132,7 +132,7 @@ void main (void) {
     int count = SketchCount > 4 ? 4 : SketchCount;
     int times = 0;
     vec2 offset = vec2(0.0, 0.0);
-    while (!any(greaterThan(offset, vec2(0.0, 0.0))) && times < count) {
+    while (!any(notEqual(offset, vec2(0.0, 0.0))) && times < count) {
         Sketch sketch = sketchs[times];
         offset = getOffset(sketch.PointLT, sketch.PointRT, sketch.PointRB, sketch.PointLB, time, TextureCoordsVarying);
         times++;
