@@ -69,6 +69,18 @@ float getMaxDistance(vec2 point, vec2 point1, vec2 point2, vec2 point3, vec2 cen
     return resultDistance;
 }
 
+float getMaxCenterOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB) {
+    float minX = min(min(pointLT.x, pointRT.x), min(pointRB.x, pointLB.x));
+    float maxX = max(max(pointLT.x, pointRT.x), max(pointRB.x, pointLB.x));
+    float minY = min(min(pointLT.y, pointRT.y), min(pointRB.y, pointLB.y));
+    float maxY = max(max(pointLT.y, pointRT.y), max(pointRB.y, pointLB.y));
+    
+    float maxWidth = maxX - minX;
+    float maxHeight = maxY - minY;
+    
+    return min(maxWidth, maxHeight) * 0.04;
+}
+
 vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float time, vec2 targetPoint) {
     vec2 center = (pointLT + pointRT + pointRB + pointLB) / 4.0;
     float distanceToCenter = distance(TextureCoordsVarying, center);
@@ -85,6 +97,8 @@ vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float tim
     
     int times = 0;
     float resultDistance = -1.0;
+    
+    float maxCenterDistance = getMaxCenterOffset(pointLT, pointRT, pointRB, pointLB);
     
     while (resultDistance < 0.0 && times < 4) {
         vec2 point1;
@@ -118,9 +132,13 @@ vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float tim
     }
     
     vec2 offset = vec2(0, 0);
-    if (maxDistance > 0.0) {
-        vec2 maxOffset = vec2(0.04, 0.04) * sin(time * PI);
-        offset = max(maxDistance - distanceToCenter, 0.0) / maxDistance * maxOffset;
+    if (maxDistance > 0.0 && distanceToCenter <= maxDistance) {
+        float centerOffsetAngle = acos(maxCenterDistance / maxDistance);
+        float currentAngle = acos(distanceToCenter / maxDistance);
+        float currentOffsetAngle = currentAngle * centerOffsetAngle / (PI / 2.0);
+        float currentOffset = maxDistance * (cos(currentOffsetAngle) - cos(currentAngle));
+        
+        offset = vec2(currentOffset, currentOffset) * sin(time * PI);
     }
     
     return offset;
