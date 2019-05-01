@@ -78,10 +78,10 @@ float getMaxCenterOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB)
     float maxWidth = maxX - minX;
     float maxHeight = maxY - minY;
     
-    return min(maxWidth, maxHeight) * 0.04;
+    return min(maxWidth, maxHeight) * 0.06;
 }
 
-vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float time, vec2 targetPoint) {
+vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float time, vec2 targetPoint, float animationTimes) {
     vec2 center = (pointLT + pointRT + pointRB + pointLB) / 4.0;
     float distanceToCenter = distance(TextureCoordsVarying, center);
     float maxDistance = -1.0;
@@ -98,7 +98,8 @@ vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float tim
     int times = 0;
     float resultDistance = -1.0;
     
-    float maxCenterDistance = getMaxCenterOffset(pointLT, pointRT, pointRB, pointLB);
+    float amplitude = 1.0 - min(1.0, animationTimes * 0.2);
+    float maxCenterDistance = getMaxCenterOffset(pointLT, pointRT, pointRB, pointLB) * amplitude;
     
     while (resultDistance < 0.0 && times < 4) {
         vec2 point1;
@@ -149,13 +150,14 @@ vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float tim
 
 void main (void) {
     float time = mod(Time, 2.0);
+    float animationTimes = floor(Time / 2.0) + (time > 0.0 ? 1.0 : 0.0);
 
     int count = SketchCount > 4 ? 4 : SketchCount;
     int times = 0;
     vec2 offset = vec2(0.0, 0.0);
     while (!any(notEqual(offset, vec2(0.0, 0.0))) && times < count) {
         Sketch sketch = sketchs[times];
-        offset = getOffset(sketch.PointLT, sketch.PointRT, sketch.PointRB, sketch.PointLB, time, TextureCoordsVarying);
+        offset = getOffset(sketch.PointLT, sketch.PointRT, sketch.PointRB, sketch.PointLB, time, TextureCoordsVarying, animationTimes);
         times++;
     }
     
