@@ -138,7 +138,10 @@ vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float tim
         float currentOffsetAngle = currentAngle * centerOffsetAngle / (PI / 2.0);
         float currentOffset = maxDistance * (cos(currentOffsetAngle) - cos(currentAngle));
         
-        offset = vec2(currentOffset, currentOffset) * sin(time * PI);
+        float x = mod(time * 2.0, 2.0) > 1.0 ? 2.0 - mod(time * 2.0, 2.0) : mod(time * 2.0, 2.0);
+        float progress = (time - 1.0) / abs(time - 1.0) * (2.0 * x - pow(x, 2.0));
+        
+        offset = vec2(currentOffset, currentOffset) * progress;
     }
     
     return offset;
