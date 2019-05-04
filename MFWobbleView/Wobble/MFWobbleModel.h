@@ -19,4 +19,6 @@
 
 @property (nonatomic, assign) CGFloat lastAnimationBeginTime; // 上次动画的开始时间
 
+- (BOOL)containsPoint:(CGPoint)point;
+
 @end

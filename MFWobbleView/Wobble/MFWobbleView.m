@@ -37,9 +37,11 @@ typedef struct {
 @property (nonatomic, strong) CAEAGLLayer *glLayer;
 
 @property (nonatomic, strong) CADisplayLink *displayLink;
-@property (nonatomic, assign) NSTimeInterval startTimeInterval;
 
 @property (nonatomic, assign) GLuint textureID;
+
+@property (nonatomic, weak) MFWobbleModel *currentTouchModel; // 当前触摸选中的模型
+@property (nonatomic, assign) CGPoint startPoint; // 起始触摸点
 
 @end
 
@@ -84,6 +86,34 @@ typedef struct {
     [super removeFromSuperview];
     
     [self stopAnimation];
+}
+
+- (void)touchesBegan:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
+    
+    CGPoint currentPoint = [[touches anyObject] locationInView:self];
+    currentPoint = CGPointMake(currentPoint.x / self.bounds.size.width, 1 - (currentPoint.y / self.bounds.size.height)); // 归一化
+    for (MFWobbleModel *model in self.wobbleModels) {
+        if ([model containsPoint:currentPoint]) {
+            self.currentTouchModel = model;
+            self.startPoint = currentPoint;
+            break;
+        }
+    }
+}
+
+- (void)touchesMoved:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    [super touchesMoved:touches withEvent:event];
+    
+    if (self.currentTouchModel) {
+        CGPoint currentPoint = [[touches anyObject] locationInView:self];
+        currentPoint = CGPointMake(currentPoint.x / self.bounds.size.width, 1 - (currentPoint.y / self.bounds.size.height)); // 归一化
+        CGFloat distance = sqrt(pow(self.startPoint.x - currentPoint.x, 2.0) + pow(self.startPoint.y - currentPoint.y, 2.0));
+        CGPoint direction = CGPointMake((currentPoint.x - self.startPoint.x) / distance, ((currentPoint.y - self.startPoint.y) / distance));
+        [self startAnimationWithModel:self.currentTouchModel direction:direction amplitude:1.0];
+        
+        self.currentTouchModel = nil;
+    }
 }
 
 #pragma mark - Custom Accessor
@@ -233,7 +263,6 @@ typedef struct {
         self.displayLink = nil;
     }
     
-    self.startTimeInterval = 0;
     self.displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(timeAction)];
     [self.displayLink addToRunLoop:[NSRunLoop mainRunLoop]
                            forMode:NSRunLoopCommonModes];
@@ -268,18 +297,21 @@ typedef struct {
         char nameLB[30];
         char direction[30];
         char amplitude[30];
+        char time[30];
         sprintf(nameLT, "sketchs[%d].PointLT", (int)index);
         sprintf(nameRT, "sketchs[%d].PointRT", (int)index);
         sprintf(nameRB, "sketchs[%d].PointRB", (int)index);
         sprintf(nameLB, "sketchs[%d].PointLB", (int)index);
         sprintf(direction, "sketchs[%d].Direction", (int)index);
         sprintf(amplitude, "sketchs[%d].Amplitude", (int)index);
+        sprintf(time, "sketchs[%d].Time", (int)index);
         GLuint PointLT = glGetUniformLocation(self.program, nameLT);
         GLuint PointRT = glGetUniformLocation(self.program, nameRT);
         GLuint PointRB = glGetUniformLocation(self.program, nameRB);
         GLuint PointLB = glGetUniformLocation(self.program, nameLB);
         GLuint Direction = glGetUniformLocation(self.program, direction);
         GLuint Amplitude = glGetUniformLocation(self.program, amplitude);
+        GLuint Time = glGetUniformLocation(self.program, time);
         
         glUniform2f(PointLT, model.pointLT.x, model.pointLT.y);
         glUniform2f(PointRT, model.pointRT.x, model.pointRT.y);
@@ -287,12 +319,10 @@ typedef struct {
         glUniform2f(PointLB, model.pointLB.x, model.pointLB.y);
         glUniform2f(Direction, model.direction.x, model.direction.y);
         glUniform1f(Amplitude, model.amplitude);
+        glUniform1f(Time, self.displayLink.timestamp - model.lastAnimationBeginTime);
     }
     
-    CGFloat currentTime = self.displayLink.timestamp - self.startTimeInterval;
-    GLuint time = glGetUniformLocation(self.program, "Time");
     GLuint duration = glGetUniformLocation(self.program, "Duration");
-    glUniform1f(time, currentTime);
     glUniform1f(duration, kSingleAnimationDuration);
     
     glActiveTexture(GL_TEXTURE0);
@@ -325,9 +355,6 @@ typedef struct {
 #pragma mark - Action
 
 - (void)timeAction {
-    if (self.startTimeInterval == 0) {
-        self.startTimeInterval = self.displayLink.timestamp;
-    }
     for (MFWobbleModel *model in self.wobbleModels) {
         if (model.lastAnimationBeginTime == 0) {
             model.lastAnimationBeginTime = self.displayLink.timestamp;

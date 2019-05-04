@@ -7,12 +7,12 @@ struct Sketch {
     vec2 PointLB;
     vec2 Direction;  // Direction.x ^ 2 + Direction.y ^ 2 = 1
     float Amplitude;
+    float Time;
 };
 
 uniform sampler2D Texture;
 varying vec2 TextureCoordsVarying;
 
-uniform float Time;
 uniform float Duration;
 
 uniform Sketch sketchs[4];
@@ -152,14 +152,13 @@ vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float tim
 }
 
 void main (void) {
-    float time = mod(Time, Duration);
-
+    
     int count = SketchCount > 4 ? 4 : SketchCount;
     int times = 0;
     vec2 offset = vec2(0.0, 0.0);
     while (!any(notEqual(offset, vec2(0.0, 0.0))) && times < count) {
         Sketch sketch = sketchs[times];
-        offset = getOffset(sketch.PointLT, sketch.PointRT, sketch.PointRB, sketch.PointLB, time, TextureCoordsVarying, sketch.Direction, sketch.Amplitude);
+        offset = getOffset(sketch.PointLT, sketch.PointRT, sketch.PointRB, sketch.PointLB, sketch.Time, TextureCoordsVarying, sketch.Direction, sketch.Amplitude);
         times++;
     }
     
