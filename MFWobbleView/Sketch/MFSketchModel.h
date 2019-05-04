@@ -14,6 +14,7 @@
 @property (nonatomic, assign) CGPoint pointRT; // 右上
 @property (nonatomic, assign) CGPoint pointLB; // 左下
 @property (nonatomic, assign) CGPoint pointRB; // 右下
+@property (nonatomic, assign) CGPoint center; // 中心点
 
 /**
  上边中点
@@ -34,10 +35,5 @@
  右边中点
  */
 - (CGPoint)rightLineCenter;
-
-/**
- 中心点
- */
-- (CGPoint)center;
 
 @end

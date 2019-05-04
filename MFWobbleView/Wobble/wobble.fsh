@@ -5,6 +5,7 @@ struct Sketch {
     vec2 PointRT;
     vec2 PointRB;
     vec2 PointLB;
+    vec2 Center;
     vec2 Direction;  // Direction.x ^ 2 + Direction.y ^ 2 = 1
     float Amplitude;
     float Time;
@@ -84,8 +85,7 @@ float getMaxCenterOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB)
     return min(maxWidth, maxHeight) * 0.08;
 }
 
-vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float time, vec2 targetPoint, vec2 direction, float amplitude) {
-    vec2 center = (pointLT + pointRT + pointRB + pointLB) / 4.0;
+vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, vec2 center, float time, vec2 targetPoint, vec2 direction, float amplitude) {
     float distanceToCenter = distance(TextureCoordsVarying, center);
     float maxDistance = -1.0;
     
@@ -158,7 +158,7 @@ void main (void) {
     vec2 offset = vec2(0.0, 0.0);
     while (!any(notEqual(offset, vec2(0.0, 0.0))) && times < count) {
         Sketch sketch = sketchs[times];
-        offset = getOffset(sketch.PointLT, sketch.PointRT, sketch.PointRB, sketch.PointLB, sketch.Time, TextureCoordsVarying, sketch.Direction, sketch.Amplitude);
+        offset = getOffset(sketch.PointLT, sketch.PointRT, sketch.PointRB, sketch.PointLB, sketch.Center, sketch.Time, TextureCoordsVarying, sketch.Direction, sketch.Amplitude);
         times++;
     }
     

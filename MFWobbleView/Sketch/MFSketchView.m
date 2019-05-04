@@ -14,7 +14,8 @@ typedef NS_ENUM(NSUInteger, MFSketchPointType) {
     MFSketchPointTypeLT = 0,
     MFSketchPointTypeRT,
     MFSketchPointTypeRB,
-    MFSketchPointTypeLB
+    MFSketchPointTypeLB,
+    MFSketchPointTypeCenter
 };
 
 @interface MFSketchView ()
@@ -32,6 +33,10 @@ typedef NS_ENUM(NSUInteger, MFSketchPointType) {
 // 画路径
 @property (nonatomic, strong) CAShapeLayer *pathLayer;
 @property (nonatomic, strong) UIBezierPath *pathsPath;
+
+// 画中心
+@property (nonatomic, strong) CAShapeLayer *centerLayer;
+@property (nonatomic, strong) UIBezierPath *centerPath;
 
 // 当前控制的点
 @property (nonatomic, weak) MFSketchModel *currentControlModel;
@@ -69,7 +74,8 @@ typedef NS_ENUM(NSUInteger, MFSketchPointType) {
         NSArray *points = @[@(model.pointLT),
                             @(model.pointRT),
                             @(model.pointRB),
-                            @(model.pointLB)];
+                            @(model.pointLB),
+                            @(model.center)];
         for (NSValue *value in points) {
             CGPoint point = [value CGPointValue];
             CGFloat distance = sqrt(pow(point.x - currentPoint.x, 2.0) + pow(point.y - currentPoint.y, 2.0));
@@ -103,6 +109,9 @@ typedef NS_ENUM(NSUInteger, MFSketchPointType) {
                 break;
             case MFSketchPointTypeLB:
                 self.currentControlModel.pointLB = point;
+                break;
+            case MFSketchPointTypeCenter:
+                self.currentControlModel.center = point;
                 break;
             default:
                 break;
@@ -163,6 +172,11 @@ typedef NS_ENUM(NSUInteger, MFSketchPointType) {
     self.pathLayer.strokeColor = [[UIColor blueColor] CGColor];
     [self.layer addSublayer:self.pathLayer];
     
+    self.centerLayer = [[CAShapeLayer alloc] init];
+    self.centerLayer.fillColor = [[UIColor blueColor] CGColor];
+    self.centerLayer.strokeColor = [[UIColor clearColor] CGColor];
+    [self.layer addSublayer:self.centerLayer];
+    
     self.linePath = [[UIBezierPath alloc] init];
     self.linePath.lineWidth = 2;
     
@@ -171,6 +185,9 @@ typedef NS_ENUM(NSUInteger, MFSketchPointType) {
     
     self.pathsPath = [[UIBezierPath alloc] init];
     self.pathsPath.lineWidth = 2;
+    
+    self.centerPath = [[UIBezierPath alloc] init];
+    self.centerPath.lineWidth = 2;
 }
 
 /**
@@ -180,12 +197,14 @@ typedef NS_ENUM(NSUInteger, MFSketchPointType) {
     [self.linePath removeAllPoints];
     [self.pointPath removeAllPoints];
     [self.pathsPath removeAllPoints];
+    [self.centerPath removeAllPoints];
     for (MFSketchModel *sketchModel in self.sketchModels) {
         [self drawSketchModel:sketchModel];
     }
     self.lineLayer.path = [self.linePath CGPath];
     self.pointLayer.path = [self.pointPath CGPath];
     self.pathLayer.path = [self.pathsPath CGPath];
+    self.centerLayer.path = [self.centerPath CGPath];
 }
 
 /**
@@ -195,6 +214,7 @@ typedef NS_ENUM(NSUInteger, MFSketchPointType) {
     [self drawLinesWithSketchModel:sketchModel];
     [self drawPointsWithSketchModel:sketchModel];
     [self drawPathsWithSketchModel:sketchModel];
+    [self drawCenterWithSketchModel:sketchModel];
 }
 
 /**
@@ -252,6 +272,18 @@ typedef NS_ENUM(NSUInteger, MFSketchPointType) {
                            controlPoint:sketchModel.pointRB];
     [self.pathsPath addQuadCurveToPoint:sketchModel.leftLineCenter
                            controlPoint:sketchModel.pointLB];
+}
+
+/**
+ 绘制中心点
+ */
+- (void)drawCenterWithSketchModel:(MFSketchModel *)sketchModel {
+    [self.centerPath moveToPoint:sketchModel.center];
+    [self.centerPath addArcWithCenter:sketchModel.center
+                              radius:8
+                          startAngle:0
+                            endAngle:M_PI * 2
+                           clockwise:YES];
 }
 
 /**
