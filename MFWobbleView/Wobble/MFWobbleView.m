@@ -7,6 +7,7 @@
 //
 
 #import <GLKit/GLKit.h>
+#import <CoreMotion/CoreMotion.h>
 
 #import "MFShaderHelper.h"
 
@@ -21,6 +22,8 @@ typedef struct {
 } SenceVertex;
 
 @interface MFWobbleView ()
+
+@property (nonatomic, strong) CMMotionManager *motionManager;
 
 @property (nonatomic, assign) SenceVertex *vertices; // 顶点数组
 @property (nonatomic, strong) EAGLContext *context;
@@ -98,13 +101,35 @@ typedef struct {
 #pragma mark - Public
 
 - (void)prepare {
-    [self startAnimation];
+    [self prepareAnimation];
 }
 
 - (void)reset {
     [self stopAnimation];
     self.wobbleModels = nil;
     [self display];
+}
+
+- (void)enableMotion {
+    self.motionManager = [[CMMotionManager alloc] init];
+    if (![self.motionManager isAccelerometerAvailable]) {
+        return;
+    }
+    self.motionManager.accelerometerUpdateInterval = 0.1;  // 0.1 秒检测一次
+    __weak typeof(self) weakSelf = self;
+    [self.motionManager startAccelerometerUpdatesToQueue:[[NSOperationQueue alloc] init] withHandler:^(CMAccelerometerData *accelerometerData, NSError *error) {
+        CMAcceleration acceleration = accelerometerData.acceleration;
+        CGFloat sensitivity = sqrt(pow(acceleration.x, 2.0) + pow(acceleration.y, 2.0));
+        if (sensitivity > 1.0) {
+            CGPoint direction = CGPointMake(acceleration.x / sensitivity, acceleration.y / sensitivity);
+            for (MFWobbleModel *model in weakSelf.wobbleModels) {
+                // 当前的振幅小于某个阈值才会受影响
+                if (model.amplitude < 0.3) {
+                    [weakSelf startAnimationWithModel:model direction:direction amplitude:1.0];
+                }
+            }
+        }
+    }];
 }
 
 #pragma mark - Private
@@ -202,7 +227,7 @@ typedef struct {
 }
 
 // 开启动画
-- (void)startAnimation {
+- (void)prepareAnimation {
     if (self.displayLink) {
         [self.displayLink invalidate];
         self.displayLink = nil;
@@ -287,6 +312,14 @@ typedef struct {
     glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
     
     [self.context presentRenderbuffer:GL_RENDERBUFFER];
+}
+
+- (void)startAnimationWithModel:(MFWobbleModel *)model
+                      direction:(CGPoint)direction
+                      amplitude:(CGFloat)amplitude {
+    model.direction = direction;
+    model.amplitude = amplitude;
+    model.lastAnimationBeginTime = 0;
 }
 
 #pragma mark - Action

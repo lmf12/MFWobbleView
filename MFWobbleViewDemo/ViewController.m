@@ -38,6 +38,7 @@
     CGFloat height = self.view.frame.size.width / image.size.width * image.size.height;
     self.wobbleView = [[MFWobbleView alloc] initWithFrame:CGRectMake(0, 100, width, height)];
     self.wobbleView.image = image;
+    [self.wobbleView enableMotion];
     [self.view addSubview:self.wobbleView];
     
     self.sketchView = [[MFSketchView alloc] initWithFrame:self.wobbleView.frame];
@@ -83,9 +84,6 @@
         wobbleModel.pointRT = CGPointMake(model.pointRT.x / width, 1 - (model.pointRT.y / height));
         wobbleModel.pointRB = CGPointMake(model.pointRB.x / width, 1 - (model.pointRB.y / height));
         wobbleModel.pointLB = CGPointMake(model.pointLB.x / width, 1 - (model.pointLB.y / height));
-        
-        wobbleModel.direction = CGPointMake(1 / sqrt(2), 1 / sqrt(2));
-        wobbleModel.amplitude = 1.0;
         
         [mutArr addObject:wobbleModel];
     }

@@ -26,4 +26,9 @@
  */
 - (void)reset;
 
+/**
+ 启用加速计
+ */
+- (void)enableMotion;
+
 @end
