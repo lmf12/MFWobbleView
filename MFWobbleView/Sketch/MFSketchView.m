@@ -8,6 +8,8 @@
 
 #import "MFSketchView.h"
 
+#define RGBA(r, g, b, a) [UIColor colorWithRed:r / 255.0 green:g / 255.0 blue:b / 255.0 alpha:a]
+
 static NSInteger const kMaxSketchCount = 4;
 
 typedef NS_ENUM(NSUInteger, MFSketchPointType) {
@@ -159,21 +161,21 @@ typedef NS_ENUM(NSUInteger, MFSketchPointType) {
 - (void)setupSketchLayer {
     self.lineLayer = [[CAShapeLayer alloc] init];
     self.lineLayer.fillColor = [[UIColor clearColor] CGColor];
-    self.lineLayer.strokeColor = [[UIColor blackColor] CGColor];
+    self.lineLayer.strokeColor = [RGBA(47, 45, 37, 1) CGColor];
     [self.layer addSublayer:self.lineLayer];
     
     self.pointLayer = [[CAShapeLayer alloc] init];
-    self.pointLayer.fillColor = [[UIColor redColor] CGColor];
+    self.pointLayer.fillColor = [RGBA(250, 81, 12, 1) CGColor];
     self.pointLayer.strokeColor = [[UIColor clearColor] CGColor];
     [self.layer addSublayer:self.pointLayer];
     
     self.pathLayer = [[CAShapeLayer alloc] init];
-    self.pathLayer.fillColor = [[UIColor clearColor] CGColor];
-    self.pathLayer.strokeColor = [[UIColor blueColor] CGColor];
+    self.pathLayer.fillColor = [RGBA(143, 196, 121, 0.4) CGColor];
+    self.pathLayer.strokeColor = [RGBA(69, 114, 86, 1) CGColor];
     [self.layer addSublayer:self.pathLayer];
     
     self.centerLayer = [[CAShapeLayer alloc] init];
-    self.centerLayer.fillColor = [[UIColor blueColor] CGColor];
+    self.centerLayer.fillColor = [RGBA(69, 114, 86, 1) CGColor];
     self.centerLayer.strokeColor = [[UIColor clearColor] CGColor];
     [self.layer addSublayer:self.centerLayer];
     
