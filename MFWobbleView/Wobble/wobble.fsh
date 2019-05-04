@@ -5,18 +5,20 @@ struct Sketch {
     vec2 PointRT;
     vec2 PointRB;
     vec2 PointLB;
+    vec2 Direction;  // Direction.x ^ 2 + Direction.y ^ 2 = 1
+    float Amplitude;
 };
 
 uniform sampler2D Texture;
 varying vec2 TextureCoordsVarying;
 
 uniform float Time;
+uniform float Duration;
 
 uniform Sketch sketchs[4];
 uniform int SketchCount;
 
 const float PI = 3.1415926;
-const float duration = 1.2;
 
 float getA(vec2 point1, vec2 point2) {
     return point2.y - point1.y;
@@ -79,10 +81,10 @@ float getMaxCenterOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB)
     float maxWidth = maxX - minX;
     float maxHeight = maxY - minY;
     
-    return min(maxWidth, maxHeight) * 0.06;
+    return min(maxWidth, maxHeight) * 0.08;
 }
 
-vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float time, vec2 targetPoint, float animationTimes) {
+vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float time, vec2 targetPoint, vec2 direction, float amplitude) {
     vec2 center = (pointLT + pointRT + pointRB + pointLB) / 4.0;
     float distanceToCenter = distance(TextureCoordsVarying, center);
     float maxDistance = -1.0;
@@ -99,7 +101,6 @@ vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float tim
     int times = 0;
     float resultDistance = -1.0;
     
-    float amplitude = 1.0 - min(1.0, animationTimes * 0.2);
     float maxCenterDistance = getMaxCenterOffset(pointLT, pointRT, pointRB, pointLB) * amplitude;
     
     while (resultDistance < 0.0 && times < 4) {
@@ -140,25 +141,25 @@ vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float tim
         float currentOffsetAngle = currentAngle * centerOffsetAngle / (PI / 2.0);
         float currentOffset = maxDistance * (cos(currentOffsetAngle) - cos(currentAngle));
         
-        float x = mod(time * 2.0, duration) > 0.5 * duration ? duration - mod(time * 2.0, duration) : mod(time * 2.0, duration);
-        float progress = (time - 0.5 * duration) / abs(time - 0.5 * duration) * (2.0 * x - pow(x, 2.0));
+        float x = mod(time * 2.0, Duration) > 0.5 * Duration ? Duration - mod(time * 2.0, Duration) : mod(time * 2.0, Duration);
+        x = x / (0.5 * Duration);
+        float progress = (time - 0.5 * Duration) / abs(time - 0.5 * Duration) * (2.0 * x - pow(x, 2.0));
         
-        offset = vec2(currentOffset, currentOffset) * progress;
+        offset = vec2(currentOffset * direction.x, currentOffset * direction.y) * progress;
     }
     
     return offset;
 }
 
 void main (void) {
-    float time = mod(Time, duration);
-    float animationTimes = floor(Time / duration) + (time > 0.0 ? 1.0 : 0.0);
+    float time = mod(Time, Duration);
 
     int count = SketchCount > 4 ? 4 : SketchCount;
     int times = 0;
     vec2 offset = vec2(0.0, 0.0);
     while (!any(notEqual(offset, vec2(0.0, 0.0))) && times < count) {
         Sketch sketch = sketchs[times];
-        offset = getOffset(sketch.PointLT, sketch.PointRT, sketch.PointRB, sketch.PointLB, time, TextureCoordsVarying, animationTimes);
+        offset = getOffset(sketch.PointLT, sketch.PointRT, sketch.PointRB, sketch.PointLB, time, TextureCoordsVarying, sketch.Direction, sketch.Amplitude);
         times++;
     }
     

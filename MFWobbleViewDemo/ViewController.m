@@ -84,6 +84,9 @@
         wobbleModel.pointRB = CGPointMake(model.pointRB.x / width, 1 - (model.pointRB.y / height));
         wobbleModel.pointLB = CGPointMake(model.pointLB.x / width, 1 - (model.pointLB.y / height));
         
+        wobbleModel.direction = CGPointMake(1 / sqrt(2), 1 / sqrt(2));
+        wobbleModel.amplitude = 1.0;
+        
         [mutArr addObject:wobbleModel];
     }
     self.wobbleView.wobbleModels = [mutArr copy];

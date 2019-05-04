@@ -13,6 +13,7 @@
 #import "MFWobbleView.h"
 
 static NSInteger const kMaxWobbleCount = 4;
+static CGFloat const kSingleAnimationDuration = 1.2f;  // 单次动画的持续时长
 
 typedef struct {
     GLKVector3 positionCoord; // (X, Y, Z)
@@ -240,24 +241,34 @@ typedef struct {
         char nameRT[30];
         char nameRB[30];
         char nameLB[30];
+        char direction[30];
+        char amplitude[30];
         sprintf(nameLT, "sketchs[%d].PointLT", (int)index);
         sprintf(nameRT, "sketchs[%d].PointRT", (int)index);
         sprintf(nameRB, "sketchs[%d].PointRB", (int)index);
         sprintf(nameLB, "sketchs[%d].PointLB", (int)index);
+        sprintf(direction, "sketchs[%d].Direction", (int)index);
+        sprintf(amplitude, "sketchs[%d].Amplitude", (int)index);
         GLuint PointLT = glGetUniformLocation(self.program, nameLT);
         GLuint PointRT = glGetUniformLocation(self.program, nameRT);
         GLuint PointRB = glGetUniformLocation(self.program, nameRB);
         GLuint PointLB = glGetUniformLocation(self.program, nameLB);
+        GLuint Direction = glGetUniformLocation(self.program, direction);
+        GLuint Amplitude = glGetUniformLocation(self.program, amplitude);
         
         glUniform2f(PointLT, model.pointLT.x, model.pointLT.y);
         glUniform2f(PointRT, model.pointRT.x, model.pointRT.y);
         glUniform2f(PointRB, model.pointRB.x, model.pointRB.y);
         glUniform2f(PointLB, model.pointLB.x, model.pointLB.y);
+        glUniform2f(Direction, model.direction.x, model.direction.y);
+        glUniform1f(Amplitude, model.amplitude);
     }
     
     CGFloat currentTime = self.displayLink.timestamp - self.startTimeInterval;
     GLuint time = glGetUniformLocation(self.program, "Time");
+    GLuint duration = glGetUniformLocation(self.program, "Duration");
     glUniform1f(time, currentTime);
+    glUniform1f(duration, kSingleAnimationDuration);
     
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, self.textureID);
@@ -283,6 +294,16 @@ typedef struct {
 - (void)timeAction {
     if (self.startTimeInterval == 0) {
         self.startTimeInterval = self.displayLink.timestamp;
+    }
+    for (MFWobbleModel *model in self.wobbleModels) {
+        if (model.lastAnimationBeginTime == 0) {
+            model.lastAnimationBeginTime = self.displayLink.timestamp;
+        } else if (self.displayLink.timestamp - model.lastAnimationBeginTime >= kSingleAnimationDuration) {
+            // 每间隔一段周期，振幅衰减
+            model.amplitude *= 0.7;
+            model.amplitude = model.amplitude < 0.1 ? 0 : model.amplitude;
+            model.lastAnimationBeginTime = self.displayLink.timestamp;
+        }
     }
     [self display];
 }
