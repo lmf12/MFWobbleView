@@ -16,6 +16,7 @@ uniform Sketch sketchs[4];
 uniform int SketchCount;
 
 const float PI = 3.1415926;
+const float duration = 1.2;
 
 float getA(vec2 point1, vec2 point2) {
     return point2.y - point1.y;
@@ -139,8 +140,8 @@ vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float tim
         float currentOffsetAngle = currentAngle * centerOffsetAngle / (PI / 2.0);
         float currentOffset = maxDistance * (cos(currentOffsetAngle) - cos(currentAngle));
         
-        float x = mod(time * 2.0, 2.0) > 1.0 ? 2.0 - mod(time * 2.0, 2.0) : mod(time * 2.0, 2.0);
-        float progress = (time - 1.0) / abs(time - 1.0) * (2.0 * x - pow(x, 2.0));
+        float x = mod(time * 2.0, duration) > 0.5 * duration ? duration - mod(time * 2.0, duration) : mod(time * 2.0, duration);
+        float progress = (time - 0.5 * duration) / abs(time - 0.5 * duration) * (2.0 * x - pow(x, 2.0));
         
         offset = vec2(currentOffset, currentOffset) * progress;
     }
@@ -149,8 +150,8 @@ vec2 getOffset(vec2 pointLT, vec2 pointRT, vec2 pointRB, vec2 pointLB, float tim
 }
 
 void main (void) {
-    float time = mod(Time, 2.0);
-    float animationTimes = floor(Time / 2.0) + (time > 0.0 ? 1.0 : 0.0);
+    float time = mod(Time, duration);
+    float animationTimes = floor(Time / duration) + (time > 0.0 ? 1.0 : 0.0);
 
     int count = SketchCount > 4 ? 4 : SketchCount;
     int times = 0;
