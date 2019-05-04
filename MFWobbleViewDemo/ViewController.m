@@ -34,9 +34,11 @@
 
 - (void)setupUI {
     UIImage *image = [UIImage imageNamed:@"sample.jpg"];
-    CGFloat width = self.view.frame.size.width;
-    CGFloat height = self.view.frame.size.width / image.size.width * image.size.height;
-    self.wobbleView = [[MFWobbleView alloc] initWithFrame:CGRectMake(0, 100, width, height)];
+    CGFloat maxHeight = self.view.frame.size.height - 240;
+    CGFloat maxWidth = maxHeight / image.size.height * image.size.width;
+    CGFloat width = MIN(self.view.frame.size.width, maxWidth);
+    CGFloat height = width / image.size.width * image.size.height;
+    self.wobbleView = [[MFWobbleView alloc] initWithFrame:CGRectMake((self.view.frame.size.width - width) / 2, 80, width, height)];
     self.wobbleView.image = image;
     [self.wobbleView enableMotion];
     [self.view addSubview:self.wobbleView];

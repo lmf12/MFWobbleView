@@ -62,6 +62,7 @@ typedef NS_ENUM(NSUInteger, MFSketchPointType) {
     self.lineLayer.frame = self.bounds;
     self.pointLayer.frame = self.bounds;
     self.pathLayer.frame = self.bounds;
+    self.centerLayer.frame = self.bounds;
 }
 
 #pragma mark - Touches
