@@ -4,7 +4,7 @@
 
 ## 效果展示
 
-![](https://lymanli-1258009115.cos.ap-guangzhou.myqcloud.com/image/github/MFWobbleView/exhibition.gif)
+![](https://github.com/lmf12/ImageHost/blob/master/MFWobbleView/exhibition.gif)
 
 ## 接口说明
 
